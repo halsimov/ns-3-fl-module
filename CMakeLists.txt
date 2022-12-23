@@ -18,9 +18,9 @@ set(GNU_MinVersion 8.0.0)
 # common options
 option(NS3_ASSERT "Enable assert on failure" OFF)
 option(NS3_DES_METRICS "Enable DES Metrics event collection" OFF)
-option(NS3_EXAMPLES "Enable examples to be built" OFF)
+option(NS3_EXAMPLES "Enable examples to be built" ON)
 option(NS3_LOG "Enable logging to be built" OFF)
-option(NS3_TESTS "Enable tests to be built" OFF)
+option(NS3_TESTS "Enable tests to be built" ON)
 
 # fd-net-device options
 option(NS3_EMU "Build with emulation support" ON)
@@ -32,7 +32,7 @@ option(NS3_CLANG_TIDY "Use clang-tidy static analysis" OFF)
 option(NS3_CLANG_TIMETRACE
        "Collect compilation statistics to analyze the build process" OFF
 )
-option(NS3_COLORED_OUTPUT "Colorize CMake messages" OFF)
+option(NS3_COLORED_OUTPUT "Colorize CMake messages" ON)
 option(NS3_COVERAGE "Enable code coverage measurements and report generation"
        OFF
 )
@@ -48,8 +48,6 @@ option(NS3_LINK_WHAT_YOU_USE
 option(NS3_SANITIZE "Build with address, leak and undefined sanitizers" OFF)
 option(NS3_SANITIZE_MEMORY "Build with memory sanitizer" OFF)
 
-# 3rd-party libraries/programs
-option(NS3_NETANIM "Build netanim" OFF)
 
 # other options
 option(NS3_ENABLE_BUILD_VERSION "Embed version info into libraries" OFF)
@@ -84,13 +82,6 @@ option(NS3_WARNINGS_AS_ERRORS
        "Treat warnings as errors. Requires NS3_WARNINGS=ON" ON
 )
 
-# Options that either select which modules will get built or disable modules
-set(NS3_ENABLED_MODULES ""
-    CACHE STRING "List of modules to enable (e.g. core;network;internet)"
-)
-set(NS3_DISABLED_MODULES ""
-    CACHE STRING "List of modules to disable (e.g. lte;wimax;wave)"
-)
 
 # Filter in the modules from which examples and tests will be built
 set(NS3_FILTER_MODULE_EXAMPLES_AND_TESTS
