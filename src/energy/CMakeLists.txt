@@ -18,6 +18,7 @@ build_lib(
     model/li-ion-energy-source.cc
     model/rv-battery-model.cc
     model/simple-device-energy-model.cc
+    model/cpu-energy-model.cc
   HEADER_FILES
     helper/basic-energy-harvester-helper.h
     helper/basic-energy-source-helper.h
@@ -36,7 +37,8 @@ build_lib(
     model/li-ion-energy-source.h
     model/rv-battery-model.h
     model/simple-device-energy-model.h
-  LIBRARIES_TO_LINK ${libnetwork}
+    model/cpu-energy-model.h
+  LIBRARIES_TO_LINK ${libnetwork} ${libreliability}
   TEST_SOURCES test/basic-energy-harvester-test.cc
                test/li-ion-energy-source-test.cc
 )

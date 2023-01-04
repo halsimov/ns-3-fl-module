@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef RELIABILITY_TDDB_MODEL_H
@@ -27,45 +28,51 @@
 
 
 namespace ns3 {
+  
 
 class ReliabilityTDDBModel : public ReliabilityModel
 {
 public:
-
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   ReliabilityTDDBModel ();
-  virtual ~ReliabilityTDDBModel ();
-
+  ~ReliabilityTDDBModel () override;
 
   /**
    * \param  Pointer to temperature object attached to the device.
    *
    * Registers the Temperature Model to Power Model.
    */
-  virtual void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel);
+  void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel) override;
 
 
   // Setter & getters for state power consumption.
-  virtual double GetA (void) const;
+
+  virtual double GetA () const;
   virtual void SetA (double A);
-  virtual double GetB (void) const;
+  virtual double GetB () const;
   virtual void SetB (double B);
-  virtual double GetArea (void) const;
+  virtual double GetArea () const;
   virtual void SetArea (double area);
 
   /**
    * \returns Current reliability
    */
-  virtual double GetReliability (void) const;
+  double GetReliability () const override;
 
   // Utility functions
-  virtual double g(double u , double v , double t_0 , double scale_p , double shape_p) const;
-  virtual double pdf_u(double x , double mean , double sigma) const;
-  virtual double pdf_v(double v , double offset , double mult , double degrees) const;
-  virtual double scale_par(double T , double V , double offset_a , double mult_a , double tau_a , double tauvolt_a) const;
-  virtual double shape_par(double T , double V , double mult_b , double tau_b , double offset_b , double multvolt_b) const; 
-  virtual double Chi_Square_Density(double x , double n) const;
-  virtual double Ln_Gamma_Function(double x) const;
+  virtual double g (double u, double v, double t_0, double scale_p, double shape_p) const;
+  virtual double pdf_u (double x, double mean, double sigma) const;
+  virtual double pdf_v (double v, double offset, double mult, double degrees) const;
+  virtual double scale_par (
+    double T, double V,
+    double offset_a, double mult_a, double tau_a, double tauvolt_a
+  ) const;
+  virtual double shape_par (
+    double T , double V ,
+    double mult_b , double tau_b , double offset_b , double multvolt_b
+  ) const; 
+  virtual double Chi_Square_Density (double x, double n) const;
+  virtual double Ln_Gamma_Function (double x) const;
   /**
    * \brief 
    *
@@ -73,69 +80,67 @@ public:
    *
    * Updates reliability.
    */
-  virtual void UpdateReliability ();
+  void UpdateReliability () override;
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
 private:
+  double __m_A;
+  double __m_B;
+  double __m_area;
+  double __voltage;
 
-  double m_A;
-  double m_B;
-  double m_area;
-  double voltage;
   //Scale-Shape Constants
 
-
-  double offset_a;
-  double mult_a;
-  double tau_a;
-  double tauvolt_a;
-  double mult_b;
-  double tau_b;
-  double offset_b;
-  double multvolt_b;
+  double __offset_a;
+  double __mult_a;
+  double __tau_a;
+  double __tauvolt_a;
+  double __mult_b;
+  double __tau_b;
+  double __offset_b;
+  double __multvolt_b;
 
   //Reliability Parameters
 
-  double pdf_v_offset;
-  double pdf_v_mult;
-  double pdf_v_degrees;
-  double pdf_u_mean;
-  double pdf_u_sigma;
-  double scale_parameter;
-  double shape_parameter;
+  double __pdf_v_offset;
+  double __pdf_v_mult;
+  double __pdf_v_degrees;
+  double __pdf_u_mean;
+  double __pdf_u_sigma;
+  double __scale_parameter;
+  double __shape_parameter;
 
   //Double integral domain
-  double u_max;
-  double u_min;
-  double v_max;
-  double v_min;
-  double subdomain_step_u;
-  double subdomain_step_v;
-  int u_num_step;
-  int v_num_step;
-  double subdomain_area;
 
-  double A;
-  int LI_index;
-  double delta_LI;
-  double t_life;
-  double Rd;
+  double __u_max;
+  double __u_min;
+  double __v_max;
+  double __v_min;
+  double __subdomain_step_u;
+  double __subdomain_step_v;
+  int __u_num_step;
+  int __v_num_step;
+  double __subdomain_area;
 
-
+  double __A;
+  int __LI_index;
+  double __delta_LI;
+  double __t_life;
+  double __Rd;
 
   Ptr<TemperatureModel> m_temperatureModel;
 
-  // This variable keeps track of the reliability of this model.
-  TracedValue<double> m_reliability;
-  EventId m_reliabilityUpdateEvent;            // energy update event
-  Time m_reliabilityUpdateInterval;
-  // State variables.
-  Time m_lastUpdateTime;          // time stamp of previous energy update
+  TracedValue<double> m_reliability; // This variable keeps track of the reliability of this model.
+  EventId m_reliabilityUpdateEvent;  // energy update event
+  Time m_reliabilityUpdateInterval;  // State variables.
+  Time m_lastUpdateTime;             // time stamp of previous energy update
 
 };
 
+
 } // namespace ns3
+
 
 #endif /* RELIABILITY_TDDB_MODEL_H */

@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef TEMPERATURE_SIMPLE_MODEL_H
@@ -24,53 +25,53 @@
 #include "ns3/traced-value.h"
 #include "ns3/temperature-model.h"
 
+
 namespace ns3 {
+
 
 class TemperatureSimpleModel : public TemperatureModel// 
 {
 public:
 
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   TemperatureSimpleModel ();
-  virtual ~TemperatureSimpleModel ();
-
-
+  ~TemperatureSimpleModel () override;
 
   // Setter & getters.
-  virtual double GetA (void) const;
+
+  virtual double GetA () const;
   virtual void SetA (double A);
-  virtual double GetB (void) const;
+  virtual double GetB () const;
   virtual void SetB (double B);
-  virtual double GetC (void) const;
+  virtual double GetC () const;
   virtual void SetC (double C);
-  virtual double GetD (void) const;
+  virtual double GetD () const;
   virtual void SetD (double D);
-  virtual double GetTenv (void) const;
-  virtual void SetTenv (double Tenv);
+  virtual double GetTenv () const;
+  void SetTenv (double Tenv) override;
   virtual void SetHorizon (Time horizon);
-  virtual void SetDeviceType(std::string devicetype);
+  void SetDeviceType(std::string devicetype) override;
 
   /**
    * \brief Updates the temperature.
    *
    */
-  virtual void UpdateTemperature (double cpupower);
+  void UpdateTemperature (double cpuPower) override;
 
   /**
    * \returns Current state.
    */
-  virtual double GetTemperature (void) const;
+  double GetTemperature () const override;
 
   /**
    * \returns Average.
    */
-  virtual double GetAvgTemperature (void) const;
+  double GetAvgTemperature () const override;
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
 private:
-
   TracedValue<double> m_temperatureCPU;
   Time m_lastUpdateTime;          // time stamp of previous temperature update
   double m_Tenv;
@@ -81,8 +82,11 @@ private:
   Time m_avgHorizon;
   double m_avgTemp;
   std::string m_deviceType;
-};
+
+}; // end class TemperatureSimpleModel
+
 
 } // namespace ns3
+
 
 #endif /* TEMPERATURE_SIMPLE_MODEL_H */

@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef PERFORMANCE_SIMPLE_MODEL_H
@@ -30,53 +31,52 @@ namespace ns3 {
 class PerformanceSimpleModel : public PerformanceModel
 {
 public:
-
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   PerformanceSimpleModel () ;
-  virtual ~PerformanceSimpleModel ();
+  ~PerformanceSimpleModel () override;
 
   // Setter & getters
-  virtual double GetA (void) const;
-  virtual void SetA (double A);
-  virtual double GetB (void) const;
-  virtual void SetB (double B);
-  virtual double GetC (void) const;
-  virtual void SetC (double C);
-  virtual double GetDataSize (void) const;
-  virtual void SetDataSize (const DoubleValue &v0);
 
-  virtual void SetDeviceType (std::string devicetype);
-  virtual void SetApplication (std::string m_appName, const DoubleValue &v0);
-  virtual double GetPacketSize (void) const;
-  virtual void SetPacketSize (const DoubleValue &v1);
-  virtual void SetThroughput(double throughput);
+  virtual double GetA () const;
+  virtual void SetA (double A);
+  virtual double GetB () const;
+  virtual void SetB (double B);
+  virtual double GetC () const;
+  virtual void SetC (double C);
+  double GetDataSize () const override;
+  void SetDataSize (const DoubleValue &v0) override;
+
+  void SetDeviceType (std::string deviceType) override;
+  void SetApplication (std::string m_appName, const DoubleValue &v0) override;
+  double GetPacketSize () const override;
+  void SetPacketSize (const DoubleValue &v1) override;
+  void SetThroughput(double throughput) override;
+  
   /**
    * \returns execution time.
    */
-  virtual double GetExecTime (void) const;
+  double GetExecTime () const override;
 
   /**
    * \returns throughput.
    */
-  virtual double GetThroughput (void) const;
+  double GetThroughput () const override;
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
 private:
-
-
-  Time m_lastUpdateTime;          // time stamp of previous energy update
+  Time m_lastUpdateTime; // time stamp of previous energy update
   double m_A;
   double m_B;
   double m_C;
-  double m_datasize;
+  double m_dataSize;
   double m_packetSize;
   std::string m_deviceType;
-  TracedValue<double> m_exectime;
+  TracedValue<double> m_execTime;
   double m_throughput;
 
-};
+}; // end class Performance Simple Model
 
 } // namespace ns3
 

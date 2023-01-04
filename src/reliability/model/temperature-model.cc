@@ -13,24 +13,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #include "ns3/log.h"
 #include "temperature-model.h"
 
 
-
 NS_LOG_COMPONENT_DEFINE ("TemperatureModel");
 
+
 namespace ns3 {
+
 
 NS_OBJECT_ENSURE_REGISTERED (TemperatureModel);
 
 TypeId
-TemperatureModel::GetTypeId (void)
+TemperatureModel::GetTypeId ()
 {
-  static TypeId tid = TypeId ("ns3::TemperatureModel")
-    .SetParent<Object> ()
+  static TypeId tid = TypeId("ns3::TemperatureModel")
+    .SetParent<Object>()
     .SetGroupName("Temperature")
   ; 
   return tid;
@@ -48,31 +50,30 @@ TemperatureModel::~TemperatureModel ()
 
 
 double
-TemperatureModel::GetTemperature (void) const
+TemperatureModel::GetTemperature () const
 {
   NS_LOG_FUNCTION (this);
   return 25.0;
 }
 
 double
-TemperatureModel::GetAvgTemperature (void) const
+TemperatureModel::GetAvgTemperature () const
 {
   NS_LOG_FUNCTION (this);
   return 0.0;
 }
 
 void
-TemperatureModel::UpdateTemperature (double cpupower)
+TemperatureModel::UpdateTemperature (double cpuPower)
 {
   NS_LOG_FUNCTION (this);
 }
 
 void
-TemperatureModel::DoDispose (void)
+TemperatureModel::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
 }
-
 
 
 } // namespace ns3

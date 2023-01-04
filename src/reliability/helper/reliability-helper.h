@@ -1,6 +1,5 @@
 /* -*-  Mode: C++; c-file-style: "gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2017 Vishwesh Rege
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -15,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Authors: Vishwesh Rege <vrege2012@gmail.com>
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 #ifndef RELIABILITY_HELPER_H
 #define RELIABILITY_HELPER_H
@@ -30,6 +29,7 @@
 
 
 namespace ns3 {
+
 
 /**
  * \ingroup reliability
@@ -52,9 +52,9 @@ public:
    * To change the channel type, loss model, or delay model, the Get/Set
    * Channel methods may be used.
    */
-  ReliabilityHelper (void);
+  ReliabilityHelper ();
 
-  virtual ~ReliabilityHelper (void);
+  virtual ~ReliabilityHelper ();
 
   /**
    * \brief Install the reliability stack(power,performance,temperature,reliability) to a node.
@@ -70,52 +70,60 @@ public:
    */
   void Install (NodeContainer c);
   
-  void SetPowerModel (std::string type,
-                       std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                       std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                       std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                       std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                       std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                       std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                       std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
-                       std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
-                       std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
+  void SetPowerModel (
+    std::string type,
+    std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue(),
+    std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue(),
+    std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue(),
+    std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue(),
+    std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue(),
+    std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue(),
+    std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue(),
+    std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue(),
+    std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue()
+  );
 
-  void SetPerformanceModel (std::string type,
-                       std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                       std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                       std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                       std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                       std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                       std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                       std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
-                       std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
-                       std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
+  void SetPerformanceModel (
+    std::string type,
+    std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue(),
+    std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue(),
+    std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue(),
+    std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue(),
+    std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue(),
+    std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue(),
+    std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue(),
+    std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue(),
+    std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue()
+  );
  
-  void SetTemperatureModel (std::string type,
-                       std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                       std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                       std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                       std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                       std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                       std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                       std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
-                       std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
-                       std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
+  void SetTemperatureModel (
+    std::string type,
+    std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue(),
+    std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue(),
+    std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue(),
+    std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue(),
+    std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue(),
+    std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue(),
+    std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue(),
+    std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue(),
+    std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue()
+  );
 
-  void SetReliabilityModel (std::string type,
-                       std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue (),
-                       std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue (),
-                       std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue (),
-                       std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue (),
-                       std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue (),
-                       std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue (),
-                       std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue (),
-                       std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue (),
-                       std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue ());
+  void SetReliabilityModel (
+    std::string type,
+    std::string n1 = "", const AttributeValue &v1 = EmptyAttributeValue(),
+    std::string n2 = "", const AttributeValue &v2 = EmptyAttributeValue(),
+    std::string n3 = "", const AttributeValue &v3 = EmptyAttributeValue(),
+    std::string n4 = "", const AttributeValue &v4 = EmptyAttributeValue(),
+    std::string n5 = "", const AttributeValue &v5 = EmptyAttributeValue(),
+    std::string n6 = "", const AttributeValue &v6 = EmptyAttributeValue(),
+    std::string n7 = "", const AttributeValue &v7 = EmptyAttributeValue(),
+    std::string n8 = "", const AttributeValue &v8 = EmptyAttributeValue(),
+    std::string n9 = "", const AttributeValue &v9 = EmptyAttributeValue()
+  );
 
   void SetApplication(std::string n0, const DoubleValue &v0, const DoubleValue &v1);
-  void SetDeviceType(std::string devicetype);
+  void SetDeviceType(std::string deviceType);
   void SetAmbientTemperature(double Tenv);
   
 private:
@@ -138,10 +146,10 @@ private:
    * \returns
    */
   ReliabilityHelper& operator= (ReliabilityHelper const &);
-
-
 };
 
-}
+
+} // ens Class ReliabilityHelper
+
 
 #endif /* RELIABILITY_HELPER_H */

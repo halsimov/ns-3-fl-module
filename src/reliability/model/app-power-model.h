@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef APP_POWER_MODEL_H
@@ -31,61 +32,58 @@ namespace ns3 {
 class AppPowerModel : public PowerModel
 {
 public:
-
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   AppPowerModel ();
 
-  virtual ~AppPowerModel ();
-
-
+  ~AppPowerModel () override;
 
   /**
    * \param  Pointer to temperature object attached to the device.
    *
    * Registers the Temperature Model to Power Model.
    */
-  virtual void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel);
+  void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel) override;
   /**
    * \param  Pointer to performance object attached to the device.
    *
    * Registers the Performance Model to Power Model.
    */
-  virtual void RegisterPerformanceModel (Ptr<PerformanceModel> performanceModel);
+  void RegisterPerformanceModel (Ptr<PerformanceModel> performanceModel) override;
 
 
   // Setter & getters.
-  virtual double GetA (void) const;
+  virtual double GetA () const;
   virtual void SetA (double A);
-  virtual double GetB (void) const;
+  virtual double GetB () const;
   virtual void SetB (double B);
-  virtual double GetC (void) const;
+  virtual double GetC () const;
   virtual void SetC (double C);
-  virtual double GetDataSize (void) const;
-  virtual void SetDataSize (double datasize);
-  std::string GetAppName (void) const;
-  virtual void SetAppName (const std::string &appname);  
-  virtual double GetIdlePowerW (void) const;
+  virtual double GetDataSize () const;
+  virtual void SetDataSize (double dataSize);
+  std::string GetAppName () const;
+  virtual void SetAppName (const std::string & appName);
+  double GetIdlePowerW () const override;
   virtual void SetIdlePowerW (double IdlePowerW);
-  virtual int GetState (void) const;
+  int GetState () const override;
   virtual void SetState (int state);
-  virtual void SetApplication(std::string appname, const DoubleValue &v0);
-  virtual void SetDeviceType(std::string devicetype);
+  void SetApplication(std::string appName, const DoubleValue &v0) override;
+  void SetDeviceType(std::string deviceType) override;
   
   /**
    * \returns Current power.
    */
-  virtual double GetPower (void) const;
+  double GetPower () const override;
 
   /**
    * \returns Total energy to be consumed.
    */
-  virtual double GetEnergy (void) const;
+  double GetEnergy () const override;
 
   /**
    * \brief Updates the power.
    *
    */
-  virtual void UpdatePower ();
+  void UpdatePower () override;
 
   /**
    * \brief Checks if CPU is idle, updates temperature.
@@ -96,52 +94,50 @@ public:
   /**
    * Starts the application
    */
-  virtual void RunApp ();
+  void RunApp () override;
 
   /**
    * Ends the application
    */
-  virtual void TerminateApp ();
+  void TerminateApp () override;
 
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
   /**
    * Handles the application running event. 
    */
-  void HandleAppRunEvent (void);
+  void HandleAppRunEvent ();
 
   /**
    * Handles the application terminating.
    */
-  void HandleAppTerminateEvent (void);
+  void HandleAppTerminateEvent ();
 
 private:
-
   Ptr<TemperatureModel> m_temperatureModel;
   Ptr<PerformanceModel> m_performanceModel;
-
 
   double m_A;
   double m_B;
   double m_C;
   double m_energy;
   double m_frequency;
-  double m_exectime;
+  double m_execTime;
   int m_currentState;
   std::string m_appName;
   std::string m_deviceType;
   double m_dataSize;
   double m_idlePowerW;
   // This variable keeps track of the total energy consumed by this model.
-  TracedValue<double> m_cpupower;
+  TracedValue<double> m_cpuPower;
   // State variables.
   EventId m_powerUpdateEvent;            // energy update event
   Time m_lastUpdateTime;          // time stamp of previous energy update
   Time m_powerUpdateInterval;            // energy update interval
 
-};
+}; // end class AppPowerModel
 
 } // namespace ns3
 

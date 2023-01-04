@@ -25,7 +25,7 @@
 #include "ns3/temperature-model.h"
 #include "ns3/performance-model.h"
 #include "ns3/device-energy-model-container.h"  // #include "device-energy-model.h"
-#include "ns3/cpu-energy-model.h"
+#include "ns3/cpu-energy-model.h" // #include "cpu-energy-model.h"
 
 namespace ns3 {
 
@@ -33,30 +33,26 @@ namespace ns3 {
 class PowerModel : public Object
 {
 public:
-
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   PowerModel ();
-  virtual ~PowerModel ();
-
-
+  ~PowerModel () override;
 
   /**
    * \returns State of the power model (idle/busy)
    *
    * Set method is to be defined in child class only if necessary.
    */
-  virtual int GetState (void) const = 0;
+  virtual int GetState () const = 0;
 
   /**
    * \returns Energy consumed.
    */
-  virtual double GetEnergy (void) const = 0;
-
+  virtual double GetEnergy () const = 0;
 
   /**
    * \returns Idle Power of the power model.
    */
-  virtual double GetIdlePowerW (void) const = 0;
+  virtual double GetIdlePowerW () const = 0;
 
   /**
    * \param  Pointer to temperature object attached to the device.
@@ -72,8 +68,7 @@ public:
    */
   virtual void RegisterPerformanceModel (Ptr<PerformanceModel> performanceModel) = 0;
 
-
-  /**
+  virtual /**
    * \param deviceEnergyModelPtr Pointer to device energy model.
    *
    * This function appends a device energy model to the end of a list of
@@ -82,15 +77,15 @@ public:
   void AppendDeviceEnergyModel (Ptr<DeviceEnergyModel> deviceEnergyModelPtr);
 
   virtual void SetApplication(std::string n0, const DoubleValue &v0) = 0;
-  virtual void SetDeviceType(std::string devicetype) = 0;
+  virtual void SetDeviceType(std::string deviceType) = 0;
 
-  //virtual void SetAppName (const std::string &appname) = 0;  
-  //virtual void SetDataSize (double datasize) = 0;
+  //virtual void SetAppName (const std::string &appName) = 0;
+  //virtual void SetDataSize (double dataSize) = 0;
 
   /**
    * \returns Current Power.
    */
-  virtual double GetPower (void) const;
+  virtual double GetPower () const;
 
   /**
    * Starts the application
@@ -108,10 +103,8 @@ public:
   virtual void UpdatePower ();
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
-
-private:
   /**
    * List of device energy models installed on the same node.
    */
@@ -122,14 +115,15 @@ protected:
    * This function notifies all DeviceEnergyModel of application run event. It
    * is called by the child PowerModel class when application is run.
    */
-  void NotifyAppRun (void);
+  void NotifyAppRun ();
 
   /**
    * This function notifies all DeviceEnergyModel of application terminate event. It
-   * is called by the child PowerMOdel class when application is terminated.
+   * is called by the child PowerModel class when application is terminated.
    */
-  void NotifyAppTerminate (void); 
-};
+  void NotifyAppTerminate ();
+
+}; //end class PowerModel
 
 } // namespace ns3
 

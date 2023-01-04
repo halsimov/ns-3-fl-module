@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #include "ns3/log.h"
@@ -25,10 +26,10 @@ namespace ns3 {
 NS_OBJECT_ENSURE_REGISTERED (PerformanceModel);
 
 TypeId
-PerformanceModel::GetTypeId (void)
+PerformanceModel::GetTypeId ()
 {
-  static TypeId tid = TypeId ("ns3::PerformanceModel")
-    .SetParent<Object> ()
+  static TypeId tid = TypeId("ns3::PerformanceModel")
+    .SetParent<Object>()
     .SetGroupName("Performance")
   ; 
   return tid;
@@ -45,38 +46,37 @@ PerformanceModel::~PerformanceModel ()
 }
 
 double
-PerformanceModel::GetExecTime (void) const
+PerformanceModel::GetExecTime () const
 {
   NS_LOG_FUNCTION (this);
   return 0.0;
 }
 
 double
-PerformanceModel::GetThroughput (void) const
+PerformanceModel::GetThroughput () const
 {
   NS_LOG_FUNCTION (this);
   return 0.0;
 }
 
 double
-PerformanceModel::GetPacketSize (void) const
+PerformanceModel::GetPacketSize () const
 {
   NS_LOG_FUNCTION (this);
   return 0.0;
 }
 double
-PerformanceModel::GetDataSize (void) const
+PerformanceModel::GetDataSize () const
 {
   NS_LOG_FUNCTION (this);
   return 0.0;
 }
 
 void
-PerformanceModel::DoDispose (void)
+PerformanceModel::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
 }
-
 
 
 } // namespace ns3

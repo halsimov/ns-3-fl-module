@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #include "ns3/log.h"
@@ -34,57 +35,66 @@
 
 NS_LOG_COMPONENT_DEFINE ("UtilPowerModel");
 
+
 namespace ns3 {
+
 
 NS_OBJECT_ENSURE_REGISTERED (UtilPowerModel);
 
 TypeId
-UtilPowerModel::GetTypeId (void)
+UtilPowerModel::GetTypeId ()
 {
-  static TypeId tid = TypeId ("ns3::UtilPowerModel")
-    .SetParent<PowerModel> ()
-    .SetGroupName ("Power")
-    .AddConstructor<UtilPowerModel> ()
-    .AddAttribute ("A",
-                   "Parameter A.",
-                   DoubleValue (1.58183313424e-06),  
-                   MakeDoubleAccessor (&UtilPowerModel::SetA,
-                                       &UtilPowerModel::GetA),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("B",
-                   "Parameter B.",
-                   DoubleValue (0.0188874750319),  
-                   MakeDoubleAccessor (&UtilPowerModel::SetB,
-                                       &UtilPowerModel::GetB),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("C",
-                   "Parameter C.",
-                   DoubleValue (1.79172123846),   
-                   MakeDoubleAccessor (&UtilPowerModel::SetC,
-                                       &UtilPowerModel::GetC),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("Frequency",
-                   "Frequency(kHz).",
-                   DoubleValue (2.4*1000000),
-                   MakeDoubleAccessor (&UtilPowerModel::SetFrequency,
-                                       &UtilPowerModel::GetFrequency),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("Utilization",
-                   "CPU Utilization",
-                   DoubleValue (0.5),    // default
-                   MakeDoubleAccessor (&UtilPowerModel::SetUtilization,
-                                       &UtilPowerModel::GetUtilization),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("IdlePowerW",
-                   "Idle Power Consumption of Cpu",
-                   DoubleValue (2.8),    // default
-                   MakeDoubleAccessor (&UtilPowerModel::SetIdlePowerW,
-                                       &UtilPowerModel::GetIdlePowerW),
-                   MakeDoubleChecker<double> ())
-    .AddTraceSource ("CpuPower",
-                     "CPU power consumption of the device.",
-                     MakeTraceSourceAccessor (&UtilPowerModel::m_cpupower),
-                     "ns3::TracedValueCallback::Double")
+  static TypeId tid = TypeId("ns3::UtilPowerModel")
+    .SetParent<PowerModel>()
+    .SetGroupName("Power")
+    .AddConstructor<UtilPowerModel>()
+    .AddAttribute("A",
+                  "Parameter A.",
+                  DoubleValue(1.58183313424e-06),  
+                  MakeDoubleAccessor(&UtilPowerModel::SetA,
+                                     &UtilPowerModel::GetA),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("B",
+                  "Parameter B.",
+                  DoubleValue(0.0188874750319),  
+                  MakeDoubleAccessor(&UtilPowerModel::SetB,
+                                     &UtilPowerModel::GetB),
+                  MakeDoubleChecker<double> ()
+    )
+    .AddAttribute("C",
+                  "Parameter C.",
+                  DoubleValue(1.79172123846),   
+                  MakeDoubleAccessor(&UtilPowerModel::SetC,
+                                     &UtilPowerModel::GetC),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("Frequency",
+                  "Frequency(kHz).",
+                  DoubleValue(2.4 * 1'000'000),
+                  MakeDoubleAccessor(&UtilPowerModel::SetFrequency,
+                                     &UtilPowerModel::GetFrequency),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("Utilization",
+                  "CPU Utilization",
+                  DoubleValue (0.5),    // default
+                  MakeDoubleAccessor(&UtilPowerModel::SetUtilization,
+                                     &UtilPowerModel::GetUtilization),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("IdlePowerW",
+                  "Idle Power Consumption of Cpu",
+                  DoubleValue(2.8),    // default
+                  MakeDoubleAccessor(&UtilPowerModel::SetIdlePowerW,
+                                     &UtilPowerModel::GetIdlePowerW),
+                  MakeDoubleChecker<double>()
+    )
+    .AddTraceSource("CpuPower",
+                    "CPU power consumption of the device.",
+                    MakeTraceSourceAccessor(&UtilPowerModel::m_cpupower),
+                    "ns3::TracedValueCallback::Double"
+    )
   ; 
   return tid;
 }
@@ -92,10 +102,10 @@ UtilPowerModel::GetTypeId (void)
 UtilPowerModel::UtilPowerModel ()
 {
   NS_LOG_FUNCTION (this);
-  m_lastUpdateTime = Seconds (0.0);
-  m_powerUpdateInterval = Seconds (0.045);
-  m_temperatureModel = NULL;      // TemperatureModel
-  m_performanceModel = NULL;      // PerformanceModel
+  m_lastUpdateTime = Seconds(0.0);
+  m_powerUpdateInterval = Seconds(0.045);
+  m_temperatureModel = nullptr; // TemperatureModel
+  m_performanceModel = nullptr; // PerformanceModel
   m_currentState = 0;
 }
 
@@ -121,12 +131,13 @@ void
 UtilPowerModel::AppendDeviceEnergyModel (Ptr<DeviceEnergyModel> deviceEnergyModelPtr)
 {
   NS_LOG_FUNCTION (this << deviceEnergyModelPtr);
-  NS_ASSERT (deviceEnergyModelPtr != NULL); // model must exist
-  m_models.Add (deviceEnergyModelPtr);
+  NS_ASSERT (deviceEnergyModelPtr); // model must exist
+
+  m_models.Add(deviceEnergyModelPtr);
 }
 
 double
-UtilPowerModel::GetPower (void) const
+UtilPowerModel::GetPower () const
 {
   NS_LOG_FUNCTION (this);
   return m_cpupower;
@@ -141,7 +152,7 @@ UtilPowerModel::SetA (double A)
 }
 
 double
-UtilPowerModel::GetA (void) const
+UtilPowerModel::GetA () const
 {
   NS_LOG_FUNCTION (this);
   return m_A;
@@ -155,7 +166,7 @@ UtilPowerModel::SetB (double B)
 }
 
 double
-UtilPowerModel::GetB (void) const
+UtilPowerModel::GetB () const
 {
   NS_LOG_FUNCTION (this);
   return m_B;
@@ -169,7 +180,7 @@ UtilPowerModel::SetC (double C)
 }
 
 double
-UtilPowerModel::GetC (void) const
+UtilPowerModel::GetC () const
 {
   NS_LOG_FUNCTION (this);
   return m_C;
@@ -184,7 +195,7 @@ UtilPowerModel::SetIdlePowerW (double idlePowerW)
 }
 
 double
-UtilPowerModel::GetIdlePowerW (void) const
+UtilPowerModel::GetIdlePowerW () const
 {
   NS_LOG_FUNCTION (this);
   return m_idlePowerW;
@@ -198,7 +209,7 @@ UtilPowerModel::SetFrequency (double frequency)
 }
 
 double
-UtilPowerModel::GetFrequency (void) const
+UtilPowerModel::GetFrequency () const
 {
   NS_LOG_FUNCTION (this);
   return m_freq;
@@ -212,161 +223,160 @@ UtilPowerModel::SetUtilization (double cpu_util)
 }
 
 double
-UtilPowerModel::GetUtilization (void) const
+UtilPowerModel::GetUtilization () const
 {
   NS_LOG_FUNCTION (this);
   return m_util;
 }
 
 void
-UtilPowerModel::SetApplication(std::string appname, const DoubleValue &v0)
+UtilPowerModel::SetApplication(std::string appName, const DoubleValue &v0)
 {
-
-  if(m_deviceType == "RaspberryPi")
+  if (m_deviceType == "RaspberryPi")
   {
-    if(appname == "AdaBoost")
+    if (appName == "AdaBoost")
     {
       m_A = 0.0;
-      m_B = 1.83*pow(10,-1);
-      m_C = 9.72*pow(10,1);
+      m_B = 1.83 * pow(10, -1);
+      m_C = 9.72 * pow(10, 1);
     }
-    else if(appname == "DecisionTree")
+    else if (appName == "DecisionTree")
     {
       m_A = 0.0;
-      m_B = 1.40*pow(10,-2);
-      m_C = 2.03*pow(10,1);
+      m_B = 1.40 * pow(10, -2);
+      m_C = 2.03 * pow(10, 1);
     }
-    else if(appname == "RandomForest")
+    else if (appName == "RandomForest")
     {
-      m_A = 1.40*pow(10,-7);
-      m_B = 4.64*pow(10,-2);
-      m_C = 2.40*pow(10,1);
+      m_A = 1.40 * pow(10, -7);
+      m_B = 4.64 * pow(10, -2);
+      m_C = 2.40 * pow(10, 1);
     }
-    else if(appname == "kNN")
+    else if (appName == "kNN")
     {
       m_A = 0.0;
       m_B = 3.30*pow(10,-2);
       m_C = 3.04*pow(10,1);
     }
-      else if(appname == "LinearSVM")
+      else if (appName == "LinearSVM")
     {
-      m_A = 1.08*pow(10,-2);
-      m_B = 1.91*pow(10,0);
-      m_C = 1.47*pow(10,1);
+      m_A = 1.08 * pow(10, -2);
+      m_B = 1.91 * pow(10, 0);
+      m_C = 1.47 * pow(10, 1);
     }
-    else if(appname == "AffinityPropagation")
+    else if (appName == "AffinityPropagation")
     {
-      m_A = 2.16*pow(10,0);
-      m_B = -6.15*pow(10,0);
-      m_C = 2.80*pow(10,1);
+      m_A = 2.16 * pow(10, 0);
+      m_B = -6.15 * pow(10, 0);
+      m_C = 2.80 * pow(10, 1);
     }
-    else if(appname == "Birch")
+    else if (appName == "Birch")
     {
-      m_A = 3.78*pow(10,-2);
-      m_B = -4.57*pow(10,-1);
-      m_C = 2.80*pow(10,1);
+      m_A = 3.78 * pow(10, -2);
+      m_B = -4.57 * pow(10, -1);
+      m_C = 2.80 * pow(10, 1);
     }
-    else if(appname == "k-means")
+    else if (appName == "k-means")
     {
-      m_A = 3.74*pow(10,-2);
-      m_B = -4.75*pow(10,-1);
-      m_C = 2.77*pow(10,1);
+      m_A = 3.74 * pow(10, -2);
+      m_B = -4.75 * pow(10, -1);
+      m_C = 2.77 * pow(10, 1);
     }
-    else if(appname == "BayesianRegression")
+    else if (appName == "BayesianRegression")
     {
-      m_A = 5.01*pow(10,-9);
-      m_B = 5.44*pow(10,-5);
-      m_C = 2.63*pow(10,1);
+      m_A = 5.01 * pow(10, -9);
+      m_B = 5.44 * pow(10, -5);
+      m_C = 2.63 * pow(10, 1);
     }
-    else if(appname == "LinearRegression")
+    else if (appName == "LinearRegression")
     {
       m_A = 0.0;
-      m_B = 8.13*pow(10,-4);
-      m_C = (1.94)*pow(10,1);
+      m_B = 8.13 * pow(10, -4);
+      m_C = 1.94 * pow(10, 1);
     }
     else
     {
-      NS_FATAL_ERROR ("AppPowerModel:Undefined application for this device: " << appname);
+      NS_FATAL_ERROR ("AppPowerModel:Undefined application for this device: " << appName);
     }
   }
-  else if(m_deviceType == "Server")
+  else if (m_deviceType == "Server")
   {
-    if(appname == "AdaBoost")
+    if (appName == "AdaBoost")
     {
       m_A = 0.0;
-      m_B = 8.54*pow(10,-1);
-      m_C = 6.67*pow(10,2);
+      m_B = 8.54 * pow(10, -1);
+      m_C = 6.67 * pow(10, 2);
     }
-    else if(appname == "DecisionTree")
+    else if (appName == "DecisionTree")
     {
       m_A = 0.0;
-      m_B = 7.76*pow(10,-2);
-      m_C = 3.41*pow(10,2);
+      m_B = 7.76 * pow(10, -2);
+      m_C = 3.41 * pow(10, 2);
     }
-    else if(appname == "RandomForest")
+    else if(appName == "RandomForest")
     {
-      m_A = 4.13*pow(10,-6);
-      m_B = 2.04*pow(10,-1);
-      m_C = 3.94*pow(10,2);
+      m_A = 4.13 * pow(10, -6);
+      m_B = 2.04 * pow(10, -1);
+      m_C = 3.94 * pow(10, 2);
     }
-    else if(appname == "kNN")
-    {
-      m_A = 0.0;
-      m_B = 1.64*pow(10,-1);
-      m_C = 4.97*pow(10,2);
-    }
-      else if(appname == "LinearSVM")
-    {
-      m_A = 3.66*pow(10,-2);
-      m_B = 5.75*pow(10,0);
-      m_C = 3.87*pow(10,2);
-    }
-    else if(appname == "AffinityPropagation")
-    {
-      m_A = 1.59*pow(10,1);
-      m_B = 3.33*pow(10,1);
-      m_C = 2.04*pow(10,2);
-    }
-    else if(appname == "Birch")
-    {
-      m_A = 2.00*pow(10,-1);
-      m_B = -8.36*pow(10,-1);
-      m_C = 4.11*pow(10,2);
-    }
-    else if(appname == "k-means")
-    {
-      m_A = 2.47*pow(10,-1);
-      m_B = -8.38*pow(10,0);
-      m_C = 5.12*pow(10,2);
-    }
-    else if(appname == "BayesianRegression")
-    {
-      m_A = 2.55*pow(10,-6);
-      m_B = -4.49*pow(10,-2);
-      m_C = 8.04*pow(10,2);
-    }
-    else if(appname == "LinearRegression")
+    else if (appName == "kNN")
     {
       m_A = 0.0;
-      m_B = 1.94*pow(10,-1);
-      m_C = -9.51*pow(10,2);
+      m_B = 1.64 * pow(10, -1);
+      m_C = 4.97 * pow(10, 2);
+    }
+      else if (appName == "LinearSVM")
+    {
+      m_A = 3.66 * pow(10, -2);
+      m_B = 5.75 * pow(10, 0);
+      m_C = 3.87 * pow(10, 2);
+    }
+    else if(appName == "AffinityPropagation")
+    {
+      m_A = 1.59 * pow(10, 1);
+      m_B = 3.33 * pow(10, 1);
+      m_C = 2.04 * pow(10, 2);
+    }
+    else if(appName == "Birch")
+    {
+      m_A = 2.00 * pow(10, -1);
+      m_B = -8.36 * pow(10, -1);
+      m_C = 4.11 * pow(10, 2);
+    }
+    else if (appName == "k-means")
+    {
+      m_A = 2.47 * pow(10, -1);
+      m_B = -8.38 * pow(10, 0);
+      m_C = 5.12 * pow(10, 2);
+    }
+    else if (appName == "BayesianRegression")
+    {
+      m_A = 2.55 * pow(10, -6);
+      m_B = -4.49 * pow(10, -2);
+      m_C = 8.04 * pow(10, 2);
+    }
+    else if (appName == "LinearRegression")
+    {
+      m_A = 0.0;
+      m_B = 1.94 * pow(10, -1);
+      m_C = -9.51 * pow(10, 2);
     }
     else
     {
-      NS_FATAL_ERROR ("AppPowerModel:Undefined application for this device: " << appname);
+      NS_FATAL_ERROR ("AppPowerModel:Undefined application for this device: " << appName);
     }
   }
   else if(m_deviceType == "Arduino")
   {
-    if(appname == "MedianFilter")
+    if (appName == "MedianFilter")
     {
       m_A = 0.0;
-      m_B = 8.13*pow(10,-4);
-      m_C = (1.94)*pow(10,1);
+      m_B = 8.13 * pow(10, -4);
+      m_C = 1.94 * pow(10, 1);
     }
     else
     {
-      NS_FATAL_ERROR ("AppPowerModel:Undefined application for this device: " << appname);
+      NS_FATAL_ERROR ("AppPowerModel:Undefined application for this device: " << appName);
     }
   }
   else
@@ -374,13 +384,13 @@ UtilPowerModel::SetApplication(std::string appname, const DoubleValue &v0)
     NS_FATAL_ERROR ("AppPowerModel:Undefined device type: " << m_deviceType);
   }
 
-  m_performanceModel->SetApplication(appname,v0.Get());
+  m_performanceModel->SetApplication(appName, v0.Get());
 }
 
 void
-UtilPowerModel::SetDeviceType(std::string devicetype)
+UtilPowerModel::SetDeviceType(std::string deviceType)
 {
-  m_deviceType = devicetype;
+  m_deviceType = deviceType;
 
   m_performanceModel->SetDeviceType(m_deviceType);
 }
@@ -393,14 +403,14 @@ UtilPowerModel::SetState (int state)
 }
 
 int
-UtilPowerModel::GetState (void) const
+UtilPowerModel::GetState () const
 {
   NS_LOG_FUNCTION (this);
   return m_currentState;
 }
 
 double
-UtilPowerModel::GetEnergy (void) const
+UtilPowerModel::GetEnergy () const
 {
   NS_LOG_FUNCTION (this);
   return m_energy;
@@ -409,66 +419,89 @@ UtilPowerModel::GetEnergy (void) const
 void
 UtilPowerModel::RunApp()
 {
-  Time now = Simulator::Now ();
-  m_powerUpdateEvent = Simulator::Schedule (now,&UtilPowerModel::UpdatePower,this);
+  Time now = Simulator::Now();
+  m_powerUpdateEvent = Simulator::Schedule(now, &UtilPowerModel::UpdatePower, this);
   m_currentState = 1;
-  m_exectime = m_performanceModel->GetExecTime();
-  Simulator::Schedule (Seconds(m_exectime),&UtilPowerModel::TerminateApp,this);
-  NS_LOG_DEBUG ("UtilPowerModel:Application scheduled successfully!" << " at time = " << Simulator::Now ());
-  NS_LOG_DEBUG ("UtilPowerModel:Application will be terminated in " << m_exectime << " seconds ");
+  m_execTime = m_performanceModel->GetExecTime();
+  Simulator::Schedule(Seconds(m_execTime), &UtilPowerModel::TerminateApp, this);
+  NS_LOG_DEBUG (
+    "UtilPowerModel:Application scheduled successfully!" 
+    << " at time = " << Simulator::Now()
+  );
+  NS_LOG_DEBUG (
+    "UtilPowerModel:Application will be terminated in "
+    << m_execTime << " seconds "
+  );
 }
 
 void
 UtilPowerModel::TerminateApp()
 {
- m_powerUpdateEvent.Cancel ();
- m_cpupower = m_idlePowerW;
- m_currentState = 0;
-   NS_LOG_DEBUG ("UtilPowerModel:Application terminated successfully!" << " at time = " << Simulator::Now ());
+  m_powerUpdateEvent.Cancel ();
+  m_cpupower = m_idlePowerW;
+  m_currentState = 0;
+  NS_LOG_DEBUG (
+    "UtilPowerModel:Application terminated successfully!" 
+    << " at time = " << Simulator::Now()
+  );
 }
 
 
 void
 UtilPowerModel::UpdatePower ()
 {
-  NS_LOG_FUNCTION ("m_A:" << m_A << " m_B:" << m_B << " m_C:" << m_C << "m_frequency:" << m_freq << "m_util:" << m_util);
-  NS_LOG_DEBUG ("UtilPowerModel:Updating power" << " at time = " << Simulator::Now ());
-  if (Simulator::IsFinished ())
-    {
-      return;
-    }
-  m_powerUpdateEvent.Cancel ();
+  NS_LOG_FUNCTION (
+     "__m_A:" << m_A <<
+    " __m_B:" << m_B <<
+    " m_C:" << m_C <<
+    "m_frequency:" << m_freq <<
+    "m_util:" << m_util
+  );
+  NS_LOG_DEBUG (
+    "UtilPowerModel:Updating power"
+    << " at time = " << Simulator::Now()
+  );
+  if (Simulator::IsFinished())
+  {
+    return;
+  }
 
-  m_cpupower = m_A*m_freq + m_B*m_util + m_C;
+  m_powerUpdateEvent.Cancel();
+
+  m_cpupower = m_A * m_freq + m_B * m_util + m_C;
 
   // update last update time stamp
-  m_lastUpdateTime = Simulator::Now ();
+  m_lastUpdateTime = Simulator::Now();
 
-  m_temperatureModel->UpdateTemperature (m_cpupower);
-  m_powerUpdateEvent = Simulator::Schedule (m_powerUpdateInterval,&UtilPowerModel::UpdatePower,this);
+  m_temperatureModel->UpdateTemperature(m_cpupower);
+  m_powerUpdateEvent = Simulator::Schedule (
+    m_powerUpdateInterval, &UtilPowerModel::UpdatePower, this
+  );
 }
 
 void
-UtilPowerModel::DoDispose (void)
+UtilPowerModel::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
-  m_temperatureModel = NULL;      // TemperatureModel
-  m_performanceModel = NULL;      // PerformanceModel
+  m_temperatureModel = nullptr; // TemperatureModel
+  m_performanceModel = nullptr; // PerformanceModel
 
 }
 
 void
-UtilPowerModel::HandleAppRunEvent (void)
+UtilPowerModel::HandleAppRunEvent ()
 {
   NS_LOG_FUNCTION (this);
-  NotifyAppRun (); // notify DeviceEnergyModel objects
+  NotifyAppRun(); // notify DeviceEnergyModel objects
 }
 
 void
-UtilPowerModel::HandleAppTerminateEvent (void)
+UtilPowerModel::HandleAppTerminateEvent ()
 {
   NS_LOG_FUNCTION (this);
-  NotifyAppTerminate (); // notify DeviceEnergyModel objects
+  NotifyAppTerminate(); // notify DeviceEnergyModel objects
 }
+
 
 } // namespace ns3
+

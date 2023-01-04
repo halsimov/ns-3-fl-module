@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #include "ns3/log.h"
@@ -26,59 +27,67 @@
 
 NS_LOG_COMPONENT_DEFINE ("TemperatureSimpleModel");
 
+
 namespace ns3 {
+
 
 NS_OBJECT_ENSURE_REGISTERED (TemperatureSimpleModel);
 
 TypeId
-TemperatureSimpleModel::GetTypeId (void)
+TemperatureSimpleModel::GetTypeId ()
 {
   static TypeId tid = TypeId ("ns3::TemperatureSimpleModel")
-    .SetParent<TemperatureModel> ()
-    .SetGroupName ("Temperature")
-    .AddConstructor<TemperatureSimpleModel> ()
-    .AddAttribute ("A",
-                   "Parameter A.",
-                   DoubleValue (0.14434),
-                   MakeDoubleAccessor (&TemperatureSimpleModel::SetA,
-                                       &TemperatureSimpleModel::GetA),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("B",
-                   "Parameter B.",
-                   DoubleValue (0.98885),
-                   MakeDoubleAccessor (&TemperatureSimpleModel::SetB,
-                                       &TemperatureSimpleModel::GetB),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("C",
-                   "Parameter C.",
-                   DoubleValue (0.04894698),
-                   MakeDoubleAccessor (&TemperatureSimpleModel::SetC,
-                                       &TemperatureSimpleModel::GetC),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("D",
-                   "Parameter D.",
-                   DoubleValue (-3.14462264),
-                   MakeDoubleAccessor (&TemperatureSimpleModel::SetD,
-                                       &TemperatureSimpleModel::GetD),
-                   MakeDoubleChecker<double> ())
-    .AddAttribute ("m_Tenv",
-                   "Ambient Temperature",
-                   DoubleValue (25.0),
-                   MakeDoubleAccessor (&TemperatureSimpleModel::SetTenv,
-                                       &TemperatureSimpleModel::GetTenv),
-                   MakeDoubleChecker<double> ())
-    .AddTraceSource ("Temperature",
-                     "Temperature of the device.",
-                     MakeTraceSourceAccessor (&TemperatureSimpleModel::m_temperatureCPU),
-                     "ns3::TracedValue::DoubleCallback")
-  ; 
+    .SetParent<TemperatureModel>()
+    .SetGroupName("Temperature")
+    .AddConstructor<TemperatureSimpleModel>()
+    .AddAttribute("A",
+                  "Parameter A.",
+                  DoubleValue(0.14434),
+                  MakeDoubleAccessor(&TemperatureSimpleModel::SetA,
+                                     &TemperatureSimpleModel::GetA),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("B",
+                  "Parameter B.",
+                  DoubleValue(0.98885),
+                  MakeDoubleAccessor(&TemperatureSimpleModel::SetB,
+                                     &TemperatureSimpleModel::GetB),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("C",
+                  "Parameter C.",
+                  DoubleValue(0.04894698),
+                  MakeDoubleAccessor(&TemperatureSimpleModel::SetC,
+                                     &TemperatureSimpleModel::GetC),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("D",
+                  "Parameter D.",
+                  DoubleValue(-3.14462264),
+                  MakeDoubleAccessor(&TemperatureSimpleModel::SetD,
+                                     &TemperatureSimpleModel::GetD),
+                  MakeDoubleChecker<double>()
+    )
+    .AddAttribute("m_Tenv",
+                  "Ambient Temperature",
+                  DoubleValue (25.0),
+                  MakeDoubleAccessor(&TemperatureSimpleModel::SetTenv,
+                                     &TemperatureSimpleModel::GetTenv),
+                  MakeDoubleChecker<double>()
+    )
+    .AddTraceSource("Temperature",
+                    "Temperature of the device.",
+                    MakeTraceSourceAccessor(&TemperatureSimpleModel::m_temperatureCPU),
+                    "ns3::TracedValue::DoubleCallback"
+    );
   return tid;
 }
 
 TemperatureSimpleModel::TemperatureSimpleModel ()
 {
   NS_LOG_FUNCTION (this);
-  m_lastUpdateTime = Seconds (0.0);
+
+  m_lastUpdateTime = Seconds(0.0);
   m_avgTemp = 0;
   m_temperatureCPU = 35;
 }
@@ -89,14 +98,14 @@ TemperatureSimpleModel::~TemperatureSimpleModel ()
 }
 
 double
-TemperatureSimpleModel::GetTemperature (void) const
+TemperatureSimpleModel::GetTemperature () const
 {
   NS_LOG_FUNCTION (this);
   return m_temperatureCPU;
 }
 
 double
-TemperatureSimpleModel::GetAvgTemperature (void) const
+TemperatureSimpleModel::GetAvgTemperature () const
 {
   NS_LOG_FUNCTION (this);
   return m_avgTemp;
@@ -110,7 +119,7 @@ TemperatureSimpleModel::SetA (double A)
 }
 
 double
-TemperatureSimpleModel::GetA (void) const
+TemperatureSimpleModel::GetA () const
 {
   NS_LOG_FUNCTION (this);
   return m_A;
@@ -125,7 +134,7 @@ TemperatureSimpleModel::SetB (double B)
 }
 
 double
-TemperatureSimpleModel::GetB (void) const
+TemperatureSimpleModel::GetB () const
 {
   NS_LOG_FUNCTION (this);
   return m_B;
@@ -139,7 +148,7 @@ TemperatureSimpleModel::SetC (double C)
 }
 
 double
-TemperatureSimpleModel::GetC (void) const
+TemperatureSimpleModel::GetC () const
 {
   NS_LOG_FUNCTION (this);
   return m_C;
@@ -153,7 +162,7 @@ TemperatureSimpleModel::SetD (double D)
 }
 
 double
-TemperatureSimpleModel::GetD (void) const
+TemperatureSimpleModel::GetD () const
 {
   NS_LOG_FUNCTION (this);
   return m_D;
@@ -163,16 +172,19 @@ void
 TemperatureSimpleModel::SetTenv (double Tenv)
 {
   NS_LOG_FUNCTION (this);
+
   m_Tenv = Tenv;
-  if(m_Tenv>=30){
+  if (m_Tenv >= 30)
+  {
     m_A = 0.1014281;
   }
 }
 
 double
-TemperatureSimpleModel::GetTenv (void) const
+TemperatureSimpleModel::GetTenv () const
 {
   NS_LOG_FUNCTION (this);
+
   return m_Tenv;
 }
 
@@ -181,6 +193,7 @@ void
 TemperatureSimpleModel::SetHorizon (Time horizon)
 {
   NS_LOG_FUNCTION (this);
+
   m_avgHorizon = horizon;
 }
 
@@ -188,35 +201,35 @@ void
 TemperatureSimpleModel::SetDeviceType(std::string devicetype)
 {
   m_deviceType = devicetype;
-  if(m_deviceType == "RaspberryPi")
+  if (m_deviceType == "RaspberryPi")
   {
-  m_A = 0.14434;
-  //m_A = 0.104;
-  m_B = 0.98885;
-  m_C = 0.04894698;
-  m_D = -3.14462264;
+    m_A = 0.14434;
+    //__m_A = 0.104;
+    m_B = 0.98885;
+    m_C = 0.04894698;
+    m_D = -3.14462264;
   }
-  else if(m_deviceType == "RaspberryPi0")
+  else if (m_deviceType == "RaspberryPi0")
   {
-  m_A = 0.14434;
-  //m_A = 0.104;
-  m_B = 0.98885;
-  m_C = 0.04894698;
-  m_D = -3.14462264;
+    m_A = 0.14434;
+    //__m_A = 0.104;
+    m_B = 0.98885;
+    m_C = 0.04894698;
+    m_D = -3.14462264;
   }
   else if (m_deviceType == "Arduino")
   {
-  m_A = 0.763094;
-  m_B = 0.010693;
-  m_C = -0.000679;
-  m_D = 9.795560;
+    m_A = 0.763094;
+    m_B = 0.010693;
+    m_C = -0.000679;
+    m_D = 9.795560;
   }
   else if (m_deviceType == "Server")
   {
-  m_A = 0.763094;
-  m_B = 0.010693;
-  m_C = -0.000679;
-  m_D = 9.795560;
+    m_A = 0.763094;
+    m_B = 0.010693;
+    m_C = -0.000679;
+    m_D = 9.795560;
   }
   else
   {
@@ -225,22 +238,25 @@ TemperatureSimpleModel::SetDeviceType(std::string devicetype)
 }
 
 void
-TemperatureSimpleModel::UpdateTemperature (double cpupower)
+TemperatureSimpleModel::UpdateTemperature (double cpuPower)
 {
   NS_LOG_FUNCTION (this << m_temperatureCPU);
-  NS_LOG_DEBUG ("TemperatureSimpleModel:Updating temperature" << " at time = " << Simulator::Now ());
+  NS_LOG_DEBUG (
+    "TemperatureSimpleModel:Updating temperature" 
+    << " at time = " << Simulator::Now()
+  );
+
   double alpha = 0.01;
-  m_temperatureCPU =  m_A*m_Tenv + m_B*m_temperatureCPU + m_C*cpupower + m_D;
+
+  m_temperatureCPU =  m_A * m_Tenv + m_B * m_temperatureCPU + m_C * cpuPower + m_D;
   m_avgTemp = (alpha * m_temperatureCPU) + (1.0 - alpha) * m_avgTemp;
 }
 
 void
-TemperatureSimpleModel::DoDispose (void)
+TemperatureSimpleModel::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
   //m_source = NULL;
 }
-
-
 
 } // namespace ns3

@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef TEMPERATURE_MODEL_H
@@ -23,40 +24,38 @@
 #include "ns3/type-id.h"
 #include "ns3/node.h"
 
+
 namespace ns3 {
+
 
 class TemperatureModel : public Object
 {
 public:
 
-  static TypeId GetTypeId (void);
-  TemperatureModel () ;
-  virtual ~TemperatureModel ();
-
-
+  static TypeId GetTypeId ();
+  TemperatureModel ();
+  ~TemperatureModel () override;
 
   /**
    * Updates temperature
    */
-  virtual void UpdateTemperature (double cpupower);
+  virtual void UpdateTemperature (double cpuPower);
 
   /**
    * \returns Current temperature.
    */
-  virtual double GetTemperature (void) const;
+  virtual double GetTemperature () const;
 
   /**
    * \returns Moving average of temperature.
    */
-  virtual double GetAvgTemperature (void) const;
+  virtual double GetAvgTemperature () const;
 
-  virtual void SetDeviceType(std::string devicetype) = 0;
+  virtual void SetDeviceType(std::string deviceType) = 0;
   virtual void SetTenv(double Tenv) = 0;
   
 private:
-  virtual void DoDispose (void);
-
-
+  void DoDispose () override;
 };
 
 } // namespace ns3

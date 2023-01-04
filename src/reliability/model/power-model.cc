@@ -13,25 +13,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
+
 #include "ns3/power-model.h"
 #include "ns3/log.h"
 
-
-
 NS_LOG_COMPONENT_DEFINE ("PowerModel");
+
 
 namespace ns3 {
 
 NS_OBJECT_ENSURE_REGISTERED (PowerModel);
 
 TypeId
-PowerModel::GetTypeId (void)
+PowerModel::GetTypeId ()
 {
-  static TypeId tid = TypeId ("ns3::PowerModel")
-    .SetParent<Object> ()
-    .SetGroupName ("Power")
-  ; 
+  static TypeId tid = TypeId("ns3::PowerModel")
+    .SetParent<Object>()
+    .SetGroupName("Power");
+
   return tid;
 }
 
@@ -46,7 +47,7 @@ PowerModel::~PowerModel ()
 }
 
 double
-PowerModel::GetPower (void) const
+PowerModel::GetPower () const
 {
   NS_LOG_FUNCTION (this);
   return 2.8;
@@ -56,10 +57,9 @@ void
 PowerModel::AppendDeviceEnergyModel (Ptr<DeviceEnergyModel> deviceEnergyModelPtr)
 {
   NS_LOG_FUNCTION (this << deviceEnergyModelPtr);
-  NS_ASSERT (deviceEnergyModelPtr != NULL); // model must exist
-  m_models.Add (deviceEnergyModelPtr);
+  NS_ASSERT (deviceEnergyModelPtr); // model must exist
+  m_models.Add(deviceEnergyModelPtr);
   NS_LOG_DEBUG ("PowerModel: Appending power model");
-  
 }
 
 void
@@ -86,7 +86,7 @@ PowerModel::UpdatePower ()
  */
 
 void
-PowerModel::DoDispose (void)
+PowerModel::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
 }
@@ -96,7 +96,7 @@ PowerModel::DoDispose (void)
  */
 
 void
-PowerModel::NotifyAppRun (void)
+PowerModel::NotifyAppRun ()
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_DEBUG ("PowerModel: NotifyAppRun");
@@ -114,12 +114,11 @@ PowerModel::NotifyAppRun (void)
   //     }
   //   }
   Ptr<DeviceEnergyModel> model = m_models.Get(0);
-  model->HandleEnergyDepletion ();
-  
+  model->HandleEnergyDepletion();
 }
 
 void
-PowerModel::NotifyAppTerminate (void)
+PowerModel::NotifyAppTerminate ()
 {
   NS_LOG_FUNCTION (this);
   NS_LOG_DEBUG ("PowerModel: NotifyAppTerminate");
@@ -134,7 +133,7 @@ PowerModel::NotifyAppTerminate (void)
   //     }
   //   }
   Ptr<DeviceEnergyModel> model = m_models.Get(0);
-  model->HandleEnergyRecharged ();
+  model->HandleEnergyRecharged();
 }
 
 } // namespace ns3

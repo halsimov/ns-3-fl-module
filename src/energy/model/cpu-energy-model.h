@@ -1,7 +1,5 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2010 Network Security Lab, University of Washington, Seattle.
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
  * published by the Free Software Foundation;
@@ -13,8 +11,9 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef CPU_ENERGY_MODEL_H
@@ -53,7 +52,7 @@ public:
   typedef Callback<void, double> UpdatePowerCallback;
 
   CpuEnergyModelPhyListener ();
-  virtual ~CpuEnergyModelPhyListener ();
+  ~CpuEnergyModelPhyListener () override;
 
   /**
    * \brief Sets the change state callback. Used by helper class.
@@ -63,20 +62,13 @@ public:
   void SetChangeStateCallback (DeviceEnergyModel::ChangeStateCallback callback);
 
   /**
-   * \brief Sets the update power callback.
-   *
-   * \param callback Update power callback.
-   */
-  void SetUpdatePowerCallback (UpdatePowerCallback callback);
-
-  /**
    * \brief Switches the WifiRadioEnergyModel to RX state.
    *
    * \param duration the expected duration of the packet reception.
    *
    * Defined in ns3::WifiPhyListener
    */
-  void NotifyRxStart (Time duration);
+  void NotifyRxStart (Time duration) override;
 
   /**
    * \brief Switches the WifiRadioEnergyModel back to IDLE state.
@@ -86,7 +78,7 @@ public:
    * Note that for the WifiRadioEnergyModel, the behavior of the function is the
    * same as NotifyRxEndError.
    */
-  void NotifyRxEndOk (void);
+  void NotifyRxEndOk () override;
 
   /**
    * \brief Switches the WifiRadioEnergyModel back to IDLE state.
@@ -96,7 +88,7 @@ public:
    * Note that for the WifiRadioEnergyModel, the behavior of the function is the
    * same as NotifyRxEndOk.
    */
-  void NotifyRxEndError (void);
+  void NotifyRxEndError () override;
 
   /**
    * \brief Switches the WifiRadioEnergyModel to TX state and switches back to
@@ -107,42 +99,47 @@ public:
    *
    * Defined in ns3::WifiPhyListener
    */
-  void NotifyTxStart (Time duration, double txPowerDbm);
+  void NotifyTxStart (Time duration, double txPowerDbm) override;
 
   /**
    * \param duration the expected busy duration.
+   * \param channelType the channel type for which the CCA busy state is reported.
+   * \param per20MhzDurations vector that indicates for how long each 20 MHz subchannel
    *
    * Defined in ns3::WifiPhyListener
    */
-  void NotifyMaybeCcaBusyStart (Time duration);
+  void NotifyCcaBusyStart (
+    Time duration,
+    WifiChannelListType channelType,
+    const std::vector<Time>& per20MhzDurations
+  ) override;
 
   /**
    * \param duration the expected channel switching duration.
    *
    * Defined in ns3::WifiPhyListener
    */
-  void NotifySwitchingStart (Time duration);
+  void NotifySwitchingStart (Time duration) override;
 
   /**
    * Defined in ns3::WifiPhyListener
    */
-  void NotifySleep (void);
+  void NotifySleep () override;
 
   /**
    * Defined in ns3::WifiPhyListener
    */
-  void NotifyWakeup (void);
+  void NotifyWakeup () override;
 
-  void NotifyOff(void);
+  void NotifyOff () override;
 
-  void NotifyOn(void);
-
+  void NotifyOn () override;
 
 private:
   /**
    * A helper function that makes scheduling m_changeStateCallback possible.
    */
-  void SwitchToIdle (void);
+  void SwitchToIdle ();
 
   /**
    * Change state callback used to notify the WifiRadioEnergyModel of a state
@@ -236,26 +233,26 @@ public:
    * \brief Get the type ID.
    * \return the object TypeId
    */
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   CpuEnergyModel ();
-  virtual ~CpuEnergyModel ();
+  ~CpuEnergyModel () override;
 
 
   /**
-   * \brief Sets pointer to EnergySouce installed on node.
+   * \brief Sets pointer to EnergySource installed on node.
    *
    * \param source Pointer to EnergySource installed on node.
    *
    * Implements DeviceEnergyModel::SetEnergySource.
    */
-  void SetEnergySource (const Ptr<EnergySource> source);
+  void SetEnergySource (const Ptr<EnergySource> source) override;
 
   /**
    * \returns Total energy consumption of the wifi device.
    *
    * Implements DeviceEnergyModel::GetTotalEnergyConsumption.
    */
-  double GetTotalEnergyConsumption (void) const;
+  double GetTotalEnergyConsumption () const override;
 
   // Setter & getters for state power consumption.
   /**
@@ -263,7 +260,7 @@ public:
    *
    * \returns parameter A of the power model.
    */
-  double GetIdlePowerW (void) const;
+  double GetIdlePowerW () const;
   /**
    * \brief Sets IdlePowerW.
    *
@@ -274,7 +271,7 @@ public:
    /**
    * \returns Current state.
    */
-   WifiPhyState GetCurrentState (void) const;
+   WifiPhyState GetCurrentState () const;
 
   /**
    * \param callback Callback function.
@@ -322,52 +319,52 @@ public:
    *
    * Implements DeviceEnergyModel::ChangeState.
    */
-  void ChangeState (int newState);
+  void ChangeState (int newState) override;
 
   /**
    * \brief Handles energy depletion.
    *
    * Implements DeviceEnergyModel::HandleEnergyDepletion
    */
-  void HandleEnergyDepletion (void);
+  void HandleEnergyDepletion () override;
 
   /**
    * \brief Handles energy recharged.
    *
    * Implements DeviceEnergyModel::HandleEnergyRecharged
    */
-  void HandleEnergyRecharged (void);
+  void HandleEnergyRecharged () override;
   
   /**
    * \brief Handles application starting.
    *
    * Implements 
    */
-  void HandleCpuAppRun (void);
+  void HandleCpuAppRun ();
 
   /**
    * \brief Handles application terminating.
    *
    * Implements 
    */
-  void HandleCpuAppTerminate (void);
+  void HandleCpuAppTerminate ();
   /**
    * \returns Pointer to the PHY listener.
    */
-  CpuEnergyModelPhyListener * GetPhyListener (void);
+  CpuEnergyModelPhyListener* GetPhyListener ();
 
-  void HandleEnergyChanged();
+  void HandleEnergyChanged() override;
 
 
 private:
-  void DoDispose (void);
+  void DoDispose () override;
 
   /**
    * \returns Power draw of Cpu at current state.
    *
    * Implements DeviceEnergyModel::GetCurrentA.
    */
-  double DoGetPower (void) const;
+  double DoGetPower () const;
 
   /**
    * \param state New state the radio device is currently in.
@@ -376,11 +373,6 @@ private:
    * can change its own state.
    */
   void SetWifiRadioState (const WifiPhyState state);
-
-  /**
-   * Sets current state to IDLE.
-   */
-  void SetWifiToIdle (void);
 
   Ptr<EnergySource> m_source; ///< energy source
   Ptr<PowerModel> m_powerModel; ///< current model
@@ -422,4 +414,3 @@ private:
 } // namespace ns3
 
 #endif /* CPU_ENERGY_MODEL_H */
-

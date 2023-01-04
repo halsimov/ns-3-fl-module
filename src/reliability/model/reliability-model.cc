@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #include "ns3/log.h"
@@ -20,23 +21,23 @@
 
 NS_LOG_COMPONENT_DEFINE ("ReliabilityModel");
 
+
 namespace ns3 {
+
 
 NS_OBJECT_ENSURE_REGISTERED (ReliabilityModel);
 
 TypeId
 ReliabilityModel::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::ReliabilityModel")
-    .SetParent<Object> ()
+  static TypeId tid = TypeId("ns3::ReliabilityModel")
+    .SetParent<Object>()
     .SetGroupName("Reliability")
   ; 
   return tid;
 }
 
-ReliabilityModel::ReliabilityModel ()
-{
-}
+ReliabilityModel::ReliabilityModel () {}
 
 ReliabilityModel::~ReliabilityModel ()
 {
@@ -44,21 +45,21 @@ ReliabilityModel::~ReliabilityModel ()
 }
 
 double
-ReliabilityModel::GetReliability (void) const
+ReliabilityModel::GetReliability () const
 {
   NS_LOG_FUNCTION (this);
   return 0.0;
 }
 
 void
-ReliabilityModel::UpdateReliability (void)
+ReliabilityModel::UpdateReliability ()
 {
   NS_LOG_FUNCTION (this);
 
 }
 
 void
-ReliabilityModel::DoDispose (void)
+ReliabilityModel::DoDispose ()
 {
   NS_LOG_FUNCTION (this);
 }

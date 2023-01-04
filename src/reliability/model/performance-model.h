@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef PERFORMANCE_MODEL_H
@@ -29,19 +30,14 @@ namespace ns3 {
 class PerformanceModel : public Object
 {
 public:
-
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   PerformanceModel () ;
-  virtual ~PerformanceModel ();
-
+  ~PerformanceModel () override;
 
   /**
   * \returns execution time.
   */
-  virtual double GetExecTime (void) const;
-
-
-
+  virtual double GetExecTime () const;
 
  /**
    * Set Application
@@ -50,22 +46,22 @@ public:
  /**
    * Set device type
    */
-  virtual void SetDeviceType (std::string devicetype) = 0;
+  virtual void SetDeviceType (std::string deviceType) = 0;
 
  /**
    * Set Packet Size
    */
   virtual void SetPacketSize (const DoubleValue &v1) = 0;
-  virtual double GetDataSize (void) const;
-  virtual double GetPacketSize (void) const;
+  virtual double GetDataSize () const;
+  virtual double GetPacketSize () const;
   virtual void SetDataSize (const DoubleValue &v0) = 0;
-  virtual double GetThroughput (void) const;
+  virtual double GetThroughput () const;
   virtual void SetThroughput (double throughput) = 0;
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
-};
+}; // end class PerformanceModel
 
 } // namespace ns3
 

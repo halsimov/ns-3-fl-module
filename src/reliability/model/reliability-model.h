@@ -13,6 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
 #ifndef RELIABILITY_MODEL_H
@@ -29,10 +30,9 @@ namespace ns3 {
 class ReliabilityModel : public Object
 {
 public:
-
-  static TypeId GetTypeId (void);
-  ReliabilityModel () ;
-  virtual ~ReliabilityModel ();
+  static TypeId GetTypeId ();
+  ReliabilityModel ();
+  ~ReliabilityModel () override;
   
   /**
    * \param  Pointer to temperature object attached to the device.
@@ -41,22 +41,20 @@ public:
    */
   virtual void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel) = 0;
 
-
   /**
    * Updates reliability
    */
-  virtual void UpdateReliability (void);
+  virtual void UpdateReliability ();
 
   /**
    * \returns Current reliability
    */
-  virtual double GetReliability (void) const;
+  virtual double GetReliability () const;
 
 private:
-  virtual void DoDispose (void);
+  void DoDispose () override;
 
-
-};
+}; // end class ReliabilityModel
 
 } // namespace ns3
 

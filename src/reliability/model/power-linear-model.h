@@ -13,10 +13,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
+ * Authors: Emily Ekaireb <eekaireb@ucsd.edu>
  */
 
-#ifndef POWER_LINEARMODEL_H
-#define POWER_LINEARMODEL_H
+#ifndef POWER_LINEAR_MODEL_H
+#define POWER_LINEAR_MODEL_H
 
 #include "ns3/nstime.h"
 #include "ns3/event-id.h"
@@ -31,26 +32,28 @@ namespace ns3 {
 class PowerLinearModel : public PowerModel
 {
 public:
-
-  static TypeId GetTypeId (void);
+  static TypeId GetTypeId ();
   PowerLinearModel ();
 
-  virtual ~PowerLinearModel ();
-
-
+  ~PowerLinearModel () override;
 
   /**
    * \param  Pointer to temperature object attached to the device.
    *
    * Registers the Temperature Model to Power Model.
    */
-  virtual void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel);
+  void RegisterTemperatureModel (Ptr<TemperatureModel> temperatureModel) override;
+
   /**
    * \param  Pointer to performance object attached to the device.
    *
    * Registers the Performance Model to Power Model.
    */
-  virtual void RegisterPerformanceModel (Ptr<PerformanceModel> performanceModel);
+  void RegisterPerformanceModel (Ptr<PerformanceModel> performanceModel) override;
+
+
+  void SetDeviceType(std::string deviceType) override;
+
   /**
    * \brief Sets pointer to EnergySouce installed on node.
    *
@@ -60,54 +63,53 @@ public:
    */
   //virtual void SetEnergySource (Ptr<EnergySource> source);
 
-  // Setter & getters.
-  virtual double GetA (void) const;
+  // Setter & getters
+
+  virtual double GetA () const;
   virtual void SetA (double A);
-  virtual double GetB (void) const;
+  virtual double GetB () const;
   virtual void SetB (double B);
-  virtual double GetC (void) const;
+  virtual double GetC () const;
   virtual void SetC (double C);
-  virtual double GetFrequency (void) const;
+  virtual double GetFrequency () const;
   virtual void SetFrequency (double frequency);
-  virtual double GetUtilization (void) const;
+  virtual double GetUtilization () const;
   virtual void SetUtilization (double utilization); 
-  virtual double GetIdlePowerW (void) const;
+  double GetIdlePowerW () const override;
   virtual void SetIdlePowerW (double IdlePowerW);
-  virtual int GetState (void) const;
+  int GetState () const override;
   virtual void SetState (int state);
-  virtual void SetApplication(std::string n0, const DoubleValue &v0);
+  void SetApplication (std::string n0, const DoubleValue &v0) override;
   
   /**
    * \returns Current power.
    */
-  virtual double GetPower (void) const;
+  double GetPower () const override;
 
   /**
    * \returns Total energy to be consumed.
    */
-  virtual double GetEnergy (void) const;
+  double GetEnergy () const override;
 
   /**
    * \brief Updates the power.
    *
    */
-  virtual void UpdatePower ();
+  void UpdatePower () override;
 
   /**
    * Starts the application
    */
-  virtual void RunApp ();
+  void RunApp () override;
 
   /**
    * Ends the application
    */
-  virtual void TerminateApp ();
+  void TerminateApp () override;
 
 
 private:
-  virtual void DoDispose (void);
-
-private:
+  void DoDispose () override;
 
   Ptr<TemperatureModel> m_temperatureModel;
   Ptr<PerformanceModel> m_performanceModel;
@@ -131,7 +133,7 @@ private:
   Time m_lastUpdateTime;          // time stamp of previous energy update
   Time m_powerUpdateInterval;            // energy update interval
 
-};
+}; //end class Power Linear Model
 
 } // namespace ns3
 
