@@ -340,7 +340,6 @@ CpuEnergyModel::GetPhyListener ()
 }
 
 
-
 /*
  * Private functions start here.
  */

@@ -312,7 +312,7 @@ interface). In particular:
 
 * a NetDeviceQueueInterface object is aggregated to all the devices by the NetDevice
   helper classes, at ``Install`` time.  See, for example, the implementation in the
-  method ``CsmaHelper::InstallPriv()``.
+  method ``CsmaHelper::InstallPrivate()``.
 
 * when notified that a netdevice queue interface has been aggregated, traffic control \
   aware devices can cache the pointer to the \

@@ -19,32 +19,33 @@
  */
 
 #include "fl-experiment.h"
-#include <random>
+
 #include <chrono>
+#include <memory>
+#include <random>
 
 using sysclock_t = std::chrono::system_clock;
 
 using namespace ns3;
 FLSimProvider g_fLSimProvider(8080);
-std::map<int, std::shared_ptr<ClientSession> > g_clients;
+std::map<int, std::shared_ptr<ClientSession>> g_clients;
 
-NS_LOG_COMPONENT_DEFINE ("Wifi-Adhoc");
+NS_LOG_COMPONENT_DEFINE("Wifi-Adhoc");
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char* argv[])
+{
+    // LogComponentEnable("PropagationLossModel", LOG_LEVEL_ALL);
 
-   //LogComponentEnable("PropagationLossModel", LOG_LEVEL_ALL);
+    FLSimProvider* flSimProvider = &g_fLSimProvider;
 
-    FLSimProvider *flSimProvider = &g_fLSimProvider;
-
-
-    std::string dataRate = "250kbps";                  /* Application layer datarate. */
-    int numClients = 20; //when numClients is 50 or greater, packets are not recieved by server
+    std::string dataRate = "250kbps"; /* Application layer data rate. */
+    int numClients = 20; // when numClients is 50 or greater, packets are not received by server
     std::string NetworkType = "wifi";
-    int MaxPacketSize = 1024; //bytes
-    double TxGain = 0.0; //dB + 30 = dBm
+    int MaxPacketSize = 1024;      // bytes
+    double TxGain = 0.0;           // dB + 30 = dBm
     double ModelSize = 1.500 * 10; // kb
     std::string learningModel = "sync";
-
 
     CommandLine cmd(__FILE__);
 
@@ -56,78 +57,71 @@ int main(int argc, char *argv[]) {
     cmd.AddValue("DataRate", "Application data rate", dataRate);
     cmd.AddValue("LearningModel", "Async or Sync federated learning", learningModel);
 
-
     cmd.Parse(argc, argv);
 
     bool bAsync = false;
-    if (learningModel.compare("async") == 0) {
+    if (learningModel == "async")
+    {
         bAsync = true;
     }
-
 
     ModelSize = ModelSize * 1000; // conversion to bytes
 
     NS_LOG_UNCOND(
             "{NumClients:" << numClients << ","
-                                            "NetworkType:" << NetworkType << ","
-                                                                             "MaxPacketSize:" << MaxPacketSize << ","
-                                                                                                                  "TxGain:"
-                           << TxGain << "}"
+            "NetworkType:" << NetworkType << ","
+            "MaxPacketSize:" << MaxPacketSize << ","
+            "TxGain:" << TxGain << "}"
     );
-    //Experiment experiment(numClients,NetworkType,MaxPacketSize,TxGain);
 
+    //Experiment experiment(numClients,NetworkType,MaxPacketSize,TxGain);
 
     std::time_t now = sysclock_t::to_time_t(sysclock_t::now());
 
-    char buf[80] = { 0 };
+    char buf[80] = {0};
     std::strftime(buf, sizeof(buf), "%Y-%m-%d_%H-%H-%S.csv", std::localtime(&now));
 
-    char strbuff[100];
-    snprintf(strbuff,99,"%s_%s_%.2f_%s",
-             learningModel.c_str(),
-             NetworkType.c_str(),
-             TxGain,
-             buf);
+    char strBuff[100];
+    snprintf(strBuff, 99, "%s_%s_%.2f_%s", learningModel.c_str(), NetworkType.c_str(), TxGain, buf);
 
-    FILE *fp=fopen(strbuff,"w");
-
-
-
-
+    FILE* fp = fopen(strBuff, "w");
 
     std::default_random_engine generator;
     std::uniform_real_distribution<double> r_dist(1.0, 4.0);
-    //std::uniform_real_distribution<double> t_dist(0,1.0);
+    // std::uniform_real_distribution<double> t_dist(0,1.0);
 
-    //initialize structure for all clients
-    for (int j = 0; j < numClients; j++) {
+    // initialize structure for all clients
+    for (int j = 0; j < numClients; j++)
+    {
+        // place the nodes at random spots from the base station
 
-        //place the nodes at random spots from the base station
-
-        double radius = (double) (5 << (j % 4 + 2));
-        //double theta = t_dist(generator);
+        double radius = (double)(5 << (j % 4 + 2));
+        // double theta = t_dist(generator);
         double theta = (1.0 / numClients) * (j);
 
         NS_LOG_UNCOND("INIT:J=" << j << " r=" << radius << " th=" << theta);
-        g_clients[j] = std::shared_ptr<ClientSession>(new ClientSession(j, radius, theta));
+        g_clients[j] = std::make_shared<ClientSession>(j, radius, theta);
     }
 
     ns3::Time timeOffset(0);
 
-    if (flSimProvider) {
+    if (flSimProvider)
+    {
         g_fLSimProvider.waitForConnection();
-      }
+    }
 
     int round = 0;
 
-    while (true) {
+    while (true)
+    {
+        round++;
 
-        round ++;
-
-        if (flSimProvider) {
+        if (flSimProvider)
+        {
             FLSimProvider::COMMAND::Type type = g_fLSimProvider.recv(g_clients);
 
-            if (type == FLSimProvider::COMMAND::Type::EXIT) {
+            if (type == FLSimProvider::COMMAND::Type::EXIT)
+            {
                 g_fLSimProvider.Close();
                 break;
             }
@@ -141,22 +135,28 @@ int main(int argc, char *argv[]) {
                                      dataRate,
                                      bAsync,
                                      flSimProvider,
-                                      fp, round
+                                     fp,
+                                     round
 
         );
         auto roundStats = experiment.WeakNetwork(g_clients, timeOffset);
 
-        NS_LOG_UNCOND(">>>>>>>>>>>>>>>>>>>>>>>>>\nTIME_OFFSET:" << timeOffset << "\n" ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        NS_LOG_UNCOND(
+            ">>>>>>>>>>>>>>>>>>>>>>>>>\nTIME_OFFSET:"
+            << timeOffset << "\n"
+            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        );
 
-        if (flSimProvider && !bAsync) {
+        if (flSimProvider && !bAsync)
+        {
             g_fLSimProvider.send(roundStats);
         }
-        if (!flSimProvider) {
+        if (!flSimProvider)
+        {
             break;
         }
 
         fflush(fp);
-
     }
 
     fclose(fp);
